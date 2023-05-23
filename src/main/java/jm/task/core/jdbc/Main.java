@@ -10,11 +10,8 @@ import java.sql.SQLException;
 public class Main {
     public static void main(String[] args) {
         UserDaoJDBCImpl userDaoJDBC = new UserDaoJDBCImpl();
-        userDaoJDBC.createUsersTable();
-        System.out.println("table created");
-
-       // userDaoJDBC.dropUsersTable();
-        //System.out.println("table deleted");
-
+    //    userDaoJDBC.createUsersTable();
+    //    userDaoJDBC.dropUsersTable();
+        userDaoJDBC.saveUser("Boby", "Benet", (byte)27);
     }
 }

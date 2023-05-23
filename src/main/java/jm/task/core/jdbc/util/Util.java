@@ -32,7 +32,6 @@ public class Util {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        // Получение соединения
         return connection;
     }
 }
