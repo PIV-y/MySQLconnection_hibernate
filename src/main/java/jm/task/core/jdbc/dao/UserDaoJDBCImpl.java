@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class UserDaoJDBCImpl extends Util implements UserDao {
-    Connection connection = null;
+  // Connection connection = null;
     public UserDaoJDBCImpl() {
     }
     public void createUsersTable() {
@@ -19,48 +19,28 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
                 "`lastName` VARCHAR(45) NULL, " +
                 "`age` TINYINT NULL, " +
                 "PRIMARY KEY (`id`));";
-        try {
-            connection = getMySQLConnection();
+        try (Connection connection = getMySQLConnection()) {
             Statement statement = connection.createStatement();
             statement.executeUpdate(sqlCreateTable);
             System.out.println("table created");
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
     public void dropUsersTable() {
         String sqlCreateTable = "DROP TABLE IF EXISTS testkata.users;";
-        try {
-            connection = getMySQLConnection();
+        try (Connection connection = getMySQLConnection()) {
             Statement statement = connection.createStatement();
             statement.executeUpdate(sqlCreateTable);
             System.out.println("table deleted");
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
     public void saveUser(String name, String lastName, byte age) {
         String sql = "INSERT IGNORE INTO `testkata`.`users` (`name`, `lastName`, `age`) VALUES (?,?,?)";
-        PreparedStatement statement = null;
-        try {
-            connection = getMySQLConnection();
-            statement = connection.prepareStatement(sql);
+        try (Connection connection = getMySQLConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, name);
             statement.setString(2, lastName);
             statement.setByte(3, age);
@@ -68,51 +48,25 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
             System.out.println("User " + name + " " + lastName + " at the age of " + age + " has been added.");
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
     public void removeUserById(long id) {
         String sql = "DELETE FROM `testkata`.`users` WHERE id = ?";
-        PreparedStatement statement = null;
-        try {
-            connection = getMySQLConnection();
-            statement = connection.prepareStatement(sql);
+        try (Connection connection = getMySQLConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setLong(1, id);
             statement.executeUpdate();
             System.out.println("User with id=" + id + " has been deleted.");
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
     public List<User> getAllUsers() {
-        PreparedStatement statement = null;
         ResultSet result;
         List<User> users = new LinkedList<>();
         String sql = "SELECT * FROM testkata.users";
-        try {
-            connection = getMySQLConnection();
-            statement = connection.prepareStatement(sql);
+        try (Connection connection = getMySQLConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             result = statement.executeQuery();
             while (result.next()) {
                 users.add(new User( result.getString(2),
@@ -121,42 +75,18 @@ public class UserDaoJDBCImpl extends Util implements UserDao {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                    throw new RuntimeException(e);
-            }
         }
         System.out.println(users);
         return users;
     }
     public void cleanUsersTable() {
-        PreparedStatement statement = null;
         String sql = "DELETE FROM testkata.users";
-        try {
-            connection = getMySQLConnection();
-            statement = connection.prepareStatement(sql);
+        try (Connection connection = getMySQLConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.executeUpdate();
             System.out.println("Table is clean.");
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
     }
 }
