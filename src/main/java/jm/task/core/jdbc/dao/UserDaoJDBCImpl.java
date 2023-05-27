@@ -10,7 +10,6 @@ import java.util.List;
 
 public class UserDaoJDBCImpl extends Util implements UserDao {
     public UserDaoJDBCImpl() {
-
     }
     Connection connectionForClass = getMySQLConnection();
     private final String sqlCreateUsersTable = "CREATE TABLE IF NOT EXISTS `testkata`.`users` (" +
