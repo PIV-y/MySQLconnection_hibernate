@@ -9,14 +9,12 @@ public class UtilHb {
 
     static {
         try {
-            Configuration configuration = new Configuration();
-            configuration.configure("hibernate.cfg.xml"); // Путь к файлу конфигурации Hibernate
+            Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
             sessionFactory = configuration.buildSessionFactory();
         } catch (Throwable ex) {
             throw new ExceptionInInitializerError(ex);
         }
     }
-
     public static Session getSession() {
         return sessionFactory.openSession();
     }
