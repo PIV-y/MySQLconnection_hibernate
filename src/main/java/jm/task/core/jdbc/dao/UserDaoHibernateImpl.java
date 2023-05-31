@@ -9,13 +9,13 @@ import org.hibernate.query.Query;
 import java.util.List;
 
 public class UserDaoHibernateImpl implements UserDao {
-    private final String SQL_CREATE_ESERS_TABLE = "CREATE TABLE IF NOT EXISTS `testkata`.`users` (" +
+    private final String sqlCreateUsersTable = "CREATE TABLE IF NOT EXISTS `testkata`.`users` (" +
             "`id` BIGINT(255) NOT NULL AUTO_INCREMENT, " +
             "`name` VARCHAR(45) NULL , " +
             "`lastName` VARCHAR(45) NULL, " +
             "`age` TINYINT NULL, " +
             "PRIMARY KEY (`id`));";
-    private final String SQL_DROP_USERS_TABLE = "DROP TABLE IF EXISTS testkata.users;";
+    private final String sqlDropUsersTable = "DROP TABLE IF EXISTS testkata.users;";
     Session session = Util.getSession();
 
     @Override
@@ -23,20 +23,11 @@ public class UserDaoHibernateImpl implements UserDao {
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
-            session.createSQLQuery(SQL_CREATE_ESERS_TABLE).executeUpdate();
+            session.createSQLQuery(sqlCreateUsersTable).executeUpdate();
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
-            }
-        } finally {
-            try {
-                if (session != null) {
-                    session.close();
-                    System.out.println("Session closed");
-                }
-            } catch (RuntimeException e) {
-                e.printStackTrace();
             }
         }
     }
@@ -46,21 +37,12 @@ public class UserDaoHibernateImpl implements UserDao {
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
-            session.createSQLQuery(SQL_DROP_USERS_TABLE).executeUpdate();
+            session.createSQLQuery(sqlDropUsersTable).executeUpdate();
             transaction.commit();
             System.out.println("Table has been deleted.");
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
-            }
-        } finally {
-            try {
-                if (session != null) {
-                    session.close();
-                    System.out.println("Session closed");
-                }
-            } catch (RuntimeException e) {
-                e.printStackTrace();
             }
         }
     }
@@ -77,15 +59,6 @@ public class UserDaoHibernateImpl implements UserDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-        } finally {
-            try {
-                if (session != null) {
-                    session.close();
-                    System.out.println("Session closed");
-                }
-            } catch (RuntimeException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -100,15 +73,6 @@ public class UserDaoHibernateImpl implements UserDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-        } finally {
-            try {
-                if (session != null) {
-                    session.close();
-                    System.out.println("Session closed");
-                }
-            } catch (RuntimeException e) {
-                e.printStackTrace();
-            }
         }
         System.out.println("User has been added.");
     }
@@ -117,15 +81,8 @@ public class UserDaoHibernateImpl implements UserDao {
     public List<User> getAllUsers() {
         try {
             return session.createQuery("from User", User.class).list();
-        } finally {
-            try {
-                if (session != null) {
-                    session.close();
-                    System.out.println("Session closed");
-                }
-            } catch (RuntimeException e) {
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -141,15 +98,6 @@ public class UserDaoHibernateImpl implements UserDao {
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
-            }
-        } finally {
-            try {
-                if (session != null) {
-                    session.close();
-                    System.out.println("Session closed");
-                }
-            } catch (RuntimeException e) {
-                e.printStackTrace();
             }
         }
         System.out.println("Table has been cleaned");
