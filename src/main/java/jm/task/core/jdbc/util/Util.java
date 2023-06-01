@@ -28,7 +28,7 @@ public class Util {
         }
         return connection;
     }
-    public static Session getSession() {
+    public static SessionFactory getSession() {
         if (sessionFactory == null) {
             try {
                 Configuration configuration = new Configuration();
@@ -45,6 +45,6 @@ public class Util {
             }
         }
         System.out.println("Getting session done");
-        return sessionFactory.openSession();
+        return sessionFactory;
     }
 }
